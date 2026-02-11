@@ -1,13 +1,16 @@
 import torch
 import json
+import os
 from torch.utils.data import Dataset
 
 class ArxivDataset(Dataset):
     def __init__(self, file_path):
         self.file_path = file_path
         self.line_offsets = []
+        self.f = None  # Placeholder for the file handle
         
         print(f"Indexing dataset at {file_path}... (this may take a minute)")
+        # We use 'rb' for indexing to get exact byte offsets easily
         with open(file_path, 'rb') as f:
             offset = 0
             for line in f:
@@ -18,14 +21,26 @@ class ArxivDataset(Dataset):
     def __len__(self):
         return len(self.line_offsets)
 
+    def _get_handle(self):
+        """Ensures each process has its own file handle."""
+        if self.f is None:
+            self.f = open(self.file_path, 'r', encoding='utf-8')
+        return self.f
+
     def __getitem__(self, idx):
-        # Handle slice or single index
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        offset = self.line_offsets[idx]
+        # Get the handle (opens file if not already open)
+        handle = self._get_handle()
         
-        with open(self.file_path, 'r', encoding='utf-8') as f:
-            f.seek(offset)
-            line = f.readline()
-            return json.loads(line)
+        offset = self.line_offsets[idx]
+        handle.seek(offset)
+        line = handle.readline()
+        
+        return json.loads(line)
+
+    def __del__(self):
+        """Close handle when object is deleted."""
+        if self.f is not None:
+            self.f.close()
