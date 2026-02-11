@@ -23,7 +23,7 @@ class ArxivParallelProcessor:
                 if line:
                     paper = json.loads(line)
                     # Execute the specific logic passed by the user
-                    output = task_func(paper)
+                    output = task_func(paper, i)
                     if output is not None:
                         partition_results.append(output)
         return partition_results
@@ -42,8 +42,6 @@ class ArxivParallelProcessor:
             start = i * chunk_size
             end = self.total_lines if i == num_workers - 1 else (i + 1) * chunk_size
             ranges.append((start, end))
-
-        print(f"Distributing task to {num_workers} cores...")
         
         final_collection = []
         with concurrent.futures.ProcessPoolExecutor(max_workers=num_workers) as executor:
