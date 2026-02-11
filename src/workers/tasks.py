@@ -41,7 +41,7 @@ def filter_by_category(
     tags = paper.get('categories', '').split()
     
     # Check for a match
-    match_found: bool = False
+    match_found = False
     if exact:
         match_found = any(tag == category for tag in tags)
     else:
@@ -65,9 +65,9 @@ def augment_and_remap_categories(
         parent_categories: list of parent categories, taken from the categories_hierarchy.json
         remapped_categories: the categories remapped to the modern namings
     """
-    raw_categories: str = paper.get("categories")
-    parent_categories: set[str | None] = set()
-    remapped_categories: list[str] = []
+    raw_categories = paper.get("categories")
+    parent_categories = set()
+    remapped_categories = []
 
     for c in raw_categories.split():
         parent_categories.add(get_parent_category(c, categories_hierarchy))

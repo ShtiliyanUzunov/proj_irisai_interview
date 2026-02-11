@@ -12,14 +12,14 @@ from typing import Any
 
 class JsonLDataset(Dataset):
     def __init__(self, file_path: str) -> None:
-        self.file_path: str = file_path
-        self.line_offsets: list[int] = []
-        self.f: io.TextIOWrapper | None = None  # Placeholder for the file handle
+        self.file_path = file_path
+        self.line_offsets = []
+        self.f = None  # Placeholder for the file handle
         
         print(f"Indexing dataset at {file_path}... (this may take a minute)")
         # We use 'rb' for indexing to get exact byte offsets easily
         with open(file_path, 'rb') as f:
-            offset: int = 0
+            offset = 0
             for line in f:
                 self.line_offsets.append(offset)
                 offset += len(line)
@@ -38,11 +38,11 @@ class JsonLDataset(Dataset):
             idx = idx.tolist()
 
         # Get the handle (opens file if not already open)
-        handle: io.TextIOWrapper = self._get_handle()
+        handle = self._get_handle()
         
-        offset: int = self.line_offsets[idx]
+        offset = self.line_offsets[idx]
         handle.seek(offset)
-        line: str = handle.readline()
+        line = handle.readline()
         
         return json.loads(line)
 

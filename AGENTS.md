@@ -22,4 +22,5 @@ Don't use external LLMs through APIs.
 
 ## Style Instructions
 
-- Always use type hinting in .py files.
+- Always use type hinting in .py files for function definitions.
+- Do not use type hinting inside function bodies (local variables, attributes). Type hints should only appear in function signatures (parameters and return types).

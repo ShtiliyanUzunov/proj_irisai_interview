@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 class JsonLParallelProcessor:
     def __init__(self, dataset: JsonLDataset) -> None:
-        self.file_path: str = dataset.file_path
-        self.line_offsets: list[int] = dataset.line_offsets
-        self.total_lines: int = len(self.line_offsets)
+        self.file_path = dataset.file_path
+        self.line_offsets = dataset.line_offsets
+        self.total_lines = len(self.line_offsets)
 
     def _partition_and_process(
         self,
@@ -26,16 +26,16 @@ class JsonLParallelProcessor:
         The core worker logic: Opens a private file handle, jumps to the 
         assigned offset, and executes the task_func on each paper.
         """
-        partition_results: list[Any] = []
+        partition_results = []
         # Each worker process gets its own independent file pointer
         with open(self.file_path, 'r', encoding='utf-8') as f:
             for i in range(start_idx, end_idx):
                 f.seek(self.line_offsets[i])
                 line = f.readline()
                 if line:
-                    paper: dict[str, Any] = json.loads(line)
+                    paper = json.loads(line)
                     # Execute the specific logic passed by the user
-                    output: Any = task_func(paper, i)
+                    output = task_func(paper, i)
                     if output is not None:
                         partition_results.append(output)
         return partition_results
@@ -51,17 +51,17 @@ class JsonLParallelProcessor:
         if num_workers is None:
             num_workers = cpu_count()
             
-        chunk_size: int = self.total_lines // num_workers
-        ranges: list[tuple[int, int]] = []
+        chunk_size = self.total_lines // num_workers
+        ranges = []
         for i in range(num_workers):
-            start: int = i * chunk_size
-            end: int = self.total_lines if i == num_workers - 1 else (i + 1) * chunk_size
+            start = i * chunk_size
+            end = self.total_lines if i == num_workers - 1 else (i + 1) * chunk_size
             ranges.append((start, end))
         
-        final_collection: list[Any] = []
+        final_collection = []
         with concurrent.futures.ProcessPoolExecutor(max_workers=num_workers) as executor:
             # We map our renamed worker method to the calculated index ranges
-            futures: list[concurrent.futures.Future[list[Any]]] = [
+            futures = [
                 executor.submit(self._partition_and_process, s, e, task_func) 
                 for s, e in ranges
             ]
