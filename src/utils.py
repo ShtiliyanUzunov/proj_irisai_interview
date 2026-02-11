@@ -1,4 +1,9 @@
-def remap_to_modern_standard(category):
+from __future__ import annotations
+
+from typing import Any
+
+
+def remap_to_modern_standard(category: str) -> str:
     """
     Translates legacy, decommissioned, or hyphenated arXiv categories 
     into the modern 'Group.Subject' standard.
@@ -48,7 +53,7 @@ def remap_to_modern_standard(category):
     # If it's already 'cond-mat.mtrl-sci', it's already modern.
     return category
 
-def get_parent_category(category_tag, nested_hierarchy):
+def get_parent_category(category_tag: str, nested_hierarchy: dict[str, Any]) -> str | None:
     """
     Looks up a category tag in the nested_hierarchy structure 
     and returns its top-level Super-Group (e.g., 'Physics' or 'Computer Science').
