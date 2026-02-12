@@ -6,11 +6,11 @@ from src.utils import get_parent_category
 from src.utils import remap_to_modern_standard
 
 
-def get_all_ids(paper: dict[str, Any], idx: int) -> str | None:
+def get_ids(paper: dict[str, Any], idx: int) -> str | None:
     return paper.get("id")
 
 
-def get_all_categories(paper: dict[str, Any], idx: int) -> str | None:
+def get_categories(paper: dict[str, Any], idx: int) -> str | None:
     return paper.get("categories")
 
 
@@ -66,11 +66,11 @@ def augment_and_remap_categories(
         remapped_categories: the categories remapped to the modern namings
     """
     raw_categories = paper.get("categories")
-    parent_categories = set()
+    parent_categories = []
     remapped_categories = []
 
     for c in raw_categories.split():
-        parent_categories.add(get_parent_category(c, categories_hierarchy))
+        parent_categories.append(get_parent_category(c, categories_hierarchy))
         remapped_categories.append(remap_to_modern_standard(c))
     
-    return (idx, raw_categories, list(parent_categories), remapped_categories)
+    return (idx, raw_categories, parent_categories, remapped_categories)

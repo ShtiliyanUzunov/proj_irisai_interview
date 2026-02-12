@@ -53,12 +53,12 @@ def remap_to_modern_standard(category: str) -> str:
     # If it's already 'cond-mat.mtrl-sci', it's already modern.
     return category
 
-def get_parent_category(category_tag: str, nested_hierarchy: dict[str, Any]) -> str | None:
+def get_parent_category(category_tag: str, categories_hierarchy: dict[str, Any]) -> str | None:
     """
-    Looks up a category tag in the nested_hierarchy structure 
+    Looks up a category tag in the categories_hierarchy structure 
     and returns its top-level Super-Group (e.g., 'Physics' or 'Computer Science').
     """
-    for group_name, group_info in nested_hierarchy.items():
+    for group_name, group_info in categories_hierarchy.items():
         # Iterate through the subgroups (e.g., 'cs', 'math', 'astro-ph')
         for subgroup_name, subgroup_info in group_info['subgroups'].items():
             # Check if the tag exists in this subgroup's tag list
