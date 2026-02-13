@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import numpy as np
 from typing import Any
 
 
@@ -66,3 +68,20 @@ def get_parent_category(category_tag: str, categories_hierarchy: dict[str, Any])
                 return group_name
                 
     return None
+
+def load_indices_from_jsonl(file_path, flatten=False, shuffle=False, seed=None):
+    data_list = []
+    
+    with open(file_path, 'r') as f:
+        data_list = [json.loads(line) for line in f]
+            
+    arr = np.array(data_list)
+
+    if flatten:
+        arr = arr.flatten()
+
+    if shuffle:
+        rng = np.random.default_rng(seed) 
+        rng.shuffle(arr)
+
+    return np.unique(arr)
