@@ -52,6 +52,7 @@ REST_FRAMEWORK = {
 
 # --- Custom app settings (from .env) ---
 LOG_DIR = os.getenv("LOG_DIR", "./logs")
+CACHE_ENABLED = os.getenv("CACHE_ENABLED", "True").lower() in ("true", "1", "yes")
 CACHE_THRESHOLD = float(os.getenv("CACHE_THRESHOLD", "0.95"))
 CACHE_EMBEDDING_MODEL = os.getenv("CACHE_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 MODEL_NAME = os.getenv("MODEL_NAME", "allenai/specter2_base")

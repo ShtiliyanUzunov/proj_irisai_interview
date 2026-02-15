@@ -26,23 +26,30 @@ class ApiConfig(AppConfig):
         from django.conf import settings
 
         from services.predictor_service import predictor_service
-        from services.semantic_cache import SemanticCache
         from services.task_queue import task_queue
 
-        cache = SemanticCache(
-            model_name=settings.CACHE_EMBEDDING_MODEL,
-            threshold=settings.CACHE_THRESHOLD,
-        )
+        cache = None
+        if settings.CACHE_ENABLED:
+            from services.semantic_cache import SemanticCache
+
+            cache = SemanticCache(
+                model_name=settings.CACHE_EMBEDDING_MODEL,
+                threshold=settings.CACHE_THRESHOLD,
+            )
+            logger.info("Semantic cache ENABLED (threshold=%.2f)", settings.CACHE_THRESHOLD)
+        else:
+            logger.info("Semantic cache DISABLED (CACHE_ENABLED=False)")
 
         task_queue.set_dependencies(
             semantic_cache=cache,
             predictor_service=predictor_service,
         )
         task_queue.start_worker()
-        logger.info("Background worker started with semantic cache (threshold=%.2f)", settings.CACHE_THRESHOLD)
+        logger.info("Background worker started")
 
         if not settings.LAZY_INIT:
             logger.info("LAZY_INIT=False — loading models eagerly at startup")
-            cache.eager_load()
+            if cache is not None:
+                cache.eager_load()
             predictor_service.eager_load()
             logger.info("All models loaded")
