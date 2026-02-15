@@ -21,6 +21,7 @@ The service has two major dependencies - BERT based models for classification.
     - Task result endpoint specs:
     This endpoint should take as input the task ID, and should return the status of the task. 
     We have 3 types of tasks - [NOT STARTED, IN PROGRESS, FINISHED]. For the FINISHED tasks - also return the result as part of the body.
+    The return respone should indicate if the result is fetched from the cache or not. The field should be called fromCache: boolean.
 
     - Queue status endpoint:
     This should return the status of the queue with the IDs, and their execution order.

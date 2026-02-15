@@ -1,0 +1,8 @@
+django
+djangorestframework
+python-dotenv
+sentence-transformers
+torch
+transformers
+adapters
+numpy
