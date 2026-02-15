@@ -40,7 +40,10 @@ CACHE_EMBEDDING_MODEL=all-MiniLM-L6-v2
 
 ### 3. Verify resource files
 
-The `resources/` folder must contain the trained adapters and config files:
+Download the resource files from:
+https://drive.google.com/file/d/1lnWlBnPN0Sabuw2rsC2EpgpayhVoE7h-/view?usp=sharing 
+Extract in the project directory.
+The `resources/` folder contains the trained adapters and config files:
 
 ```
 resources/
